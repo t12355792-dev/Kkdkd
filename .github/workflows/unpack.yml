@@ -1,0 +1,22 @@
+name: Unpack
+on:
+  workflow_dispatch:
+  push:
+    paths: ['trainclimb-build.zip']
+permissions:
+  contents: write
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          unzip -q trainclimb-build.zip -d /tmp/x
+          rm -rf /tmp/x/trainclimb-build/.github
+          rm trainclimb-build.zip
+          cp -a /tmp/x/trainclimb-build/. .
+          git config user.name github-actions
+          git config user.email actions@github.com
+          git add -A
+          git commit -m "Unpack mod"
+          git push
